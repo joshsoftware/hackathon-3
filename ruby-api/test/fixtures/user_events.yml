@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  captured_at: 2024-12-21 03:46:50
+  user_agent: MyText
+  uid: MyString
+
+two:
+  captured_at: 2024-12-21 03:46:50
+  user_agent: MyText
+  uid: MyString
