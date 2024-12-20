@@ -1,0 +1,34 @@
+services:
+  ##
+  # Relational database (persistent data)
+  #
+  postgres:
+    image: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  ##
+  # API server
+  #
+  web:
+    image: workbench/server
+    command: bash -c "bundle && bundle exec puma -p 3000 -C ./config/puma.rb"
+    volumes:
+      - rails_cache:/srv/tmp/cache
+      - bundle:/usr/local/bundle
+    tmpfs:
+      - /tmp
+    env_file:
+      - .development.env
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres:
+  bundle:
+  rails_cache:
