@@ -17,6 +17,7 @@ services:
     build: .
     command: bash -c "bundle && bundle exec puma -p 3000 -C ./config/puma.rb"
     volumes:
+      - .:/srv:cached
       - rails_cache:/srv/tmp/cache
       - bundle:/usr/local/bundle
     tmpfs:
