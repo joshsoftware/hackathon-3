@@ -1,3 +1,5 @@
+import { captureImage } from "./image";
+
 const ACTION_CLICK = "click";
 const ACTION_REFRESH = "refresh";
 

@@ -1,4 +1,4 @@
-const captureImage = async () => {
+export const captureImage = async () => {
   const image = await html2canvas(document.body).then(function (canvas) {
     let img = canvas.toDataURL("image/png");
 
