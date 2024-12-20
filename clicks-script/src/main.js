@@ -13,7 +13,7 @@ let clickImage = "";
 window.addEventListener("unload", sendRefreshEvent);
 window.addEventListener("beforeunload", sendRefreshEvent);
 
-function sendRefreshEvent() {
+async function sendRefreshEvent() {
   const url = `${BASE_URL}/api/v1/events`;
   try {
     const data = {
@@ -24,7 +24,7 @@ function sendRefreshEvent() {
       url: window.location.href,
     };
 
-    PostRequest(url, data);
+    await PostRequest(url, data);
   } catch (error) {
     console.log(error);
   }
@@ -53,21 +53,15 @@ function handleUserClick(event) {
   }
 }
 
-async function sendDataToBackend(clicks) {
-  console.log(clicks);
+async function sendDataToBackend() {
   if (!clicks || clicks.length == 0) {
     return;
   }
 
   const url = `${BASE_URL}/api/v1/events`;
-  const data = await PostRequest(url, {
-    clicks,
-  });
-
-  console.log(data);
+  await PostRequest(url, { clicks });
 
   if (clickImage != "") {
-    // Send click image to the backend
     const url = `${BASE_URL}/api/v1/image`;
 
     const body = {
@@ -75,8 +69,7 @@ async function sendDataToBackend(clicks) {
       image: clickImage,
     };
 
-    const data = PostRequest(url, body);
-    console.log(data);
+    await PostRequest(url, body);
   }
 
   // clear the clicks
