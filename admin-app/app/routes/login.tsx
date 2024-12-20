@@ -24,7 +24,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="flex items-center justify-center py-28">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
         <h1 className="text-2xl font-semibold text-center text-gray-800 mb-4">
           Login
@@ -39,7 +39,8 @@ export default function Login() {
             <input
               type="email"
               id="email"
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              placeholder="Email"
+              className="appearance-none shadow rounded-md ring-1 ring-slate-900/5 leading-5 sm:text-sm border border-transparent py-2 placeholder:text-slate-400 pl-3 pr-3 block w-full text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white dark:bg-slate-700/20 dark:ring-slate-200/20 dark:focus:ring-sky-500 dark:text-white"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -53,7 +54,8 @@ export default function Login() {
             <input
               type="password"
               id="password"
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              placeholder="Password"
+              className="appearance-none shadow rounded-md ring-1 ring-slate-900/5 leading-5 sm:text-sm border border-transparent py-2 placeholder:text-slate-400 pl-3 pr-3 block w-full text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white dark:bg-slate-700/20 dark:ring-slate-200/20 dark:focus:ring-sky-500 dark:text-white"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -62,7 +64,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition"
+            className="w-full bg-sky-500 flex-auto shadow text-white rounded-md text-sm border-y border-transparent py-2 font-semibold px-3 hover:bg-sky-600 dark:hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-300 dark:focus:ring-offset-slate-900 dark:focus:ring-sky-700"
           >
             Login
           </button>
