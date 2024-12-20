@@ -55,6 +55,9 @@ function handleUserClick(event) {
 
 async function sendDataToBackend(clicks) {
   console.log(clicks);
+  if (!clicks || clicks.length == 0) {
+    return;
+  }
 
   const url = `${BASE_URL}/api/v1/events`;
   const data = await PostRequest(url, {
