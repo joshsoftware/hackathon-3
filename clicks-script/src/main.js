@@ -1,11 +1,14 @@
 const ACTION_CLICK = "click";
 const ACTION_REFRESH = "refresh";
 
+const CLICK_RATE_THRESHOLD = 3;
+
 const TIME_INTERVAL = 2 * 1000;
 const KEY = "local-uuid";
-const BASE_URL = "https://dbdb-202-149-221-42.ngrok-free.app";
+const BASE_URL = "http://localhost:3000";
 
-const clicks = [];
+let clicks = [];
+let clickImage = "";
 
 window.addEventListener("unload", sendRefreshEvent);
 window.addEventListener("beforeunload", sendRefreshEvent);
@@ -44,16 +47,41 @@ function handleUserClick(event) {
   };
 
   clicks.push(data);
+
+  if (clicks.length >= CLICK_RATE_THRESHOLD) {
+    clickImage = captureImage();
+  }
 }
 
 async function sendDataToBackend(clicks) {
   console.log(clicks);
+  if (!clicks || clicks.length == 0) {
+    return;
+  }
 
   const url = `${BASE_URL}/api/v1/events`;
   const data = await PostRequest(url, {
     clicks,
   });
+
   console.log(data);
+
+  if (clickImage != "") {
+    // Send click image to the backend
+    const url = `${BASE_URL}/api/v1/image`;
+
+    const body = {
+      url: window.location.href,
+      image: clickImage,
+    };
+
+    const data = PostRequest(url, body);
+    console.log(data);
+  }
+
+  // clear the clicks
+  clicks = [];
+  clickImage = "";
 }
 
 // Utils
