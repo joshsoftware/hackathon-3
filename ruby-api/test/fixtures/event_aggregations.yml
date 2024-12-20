@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  url: MyString
+  element_id: MyString
+  action: MyString
+  occurrences: 1
+  duration: 1
+  event_type: 1
+
+two:
+  url: MyString
+  element_id: MyString
+  action: MyString
+  occurrences: 1
+  duration: 1
+  event_type: 1
