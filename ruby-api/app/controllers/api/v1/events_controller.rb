@@ -2,7 +2,6 @@ module Api
   module V1
     class EventsController < ApplicationController
       def create
-        byebug
         events_data = params[:clicks] # Assuming the JSON body contains "clicks" key as shown in the example
         service = EventsService::Create.new(events_data)
     
