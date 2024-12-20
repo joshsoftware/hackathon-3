@@ -1,16 +1,35 @@
 const ACTION_CLICK = "click";
+const ACTION_REFRESH = "refresh";
+
 const TIME_INTERVAL = 2 * 1000;
 const KEY = "local-uuid";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://dbdb-202-149-221-42.ngrok-free.app";
 
 const clicks = [];
 
-document.addEventListener("DOMContentLoaded", function () {
-  window.addEventListener("click", handleUserClick);
+window.addEventListener("unload", sendRefreshEvent);
+window.addEventListener("beforeunload", sendRefreshEvent);
 
-  // we are track for time interval
-  setInterval(() => sendDataToBackend(clicks), TIME_INTERVAL);
-});
+function sendRefreshEvent() {
+  const url = `${BASE_URL}/api/v1/events`;
+  try {
+    const data = {
+      unique_identifier: getUniqueIdentifier(),
+      element_identifier: "",
+      now: Date.now(),
+      action: ACTION_REFRESH,
+      url: window.location.href,
+    };
+
+    PostRequest(url, data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// we are track for time interval
+window.addEventListener("click", handleUserClick);
+setInterval(() => sendDataToBackend(clicks), TIME_INTERVAL);
 
 function handleUserClick(event) {
   const srcElement = event.srcElement;
@@ -29,12 +48,11 @@ function handleUserClick(event) {
 
 async function sendDataToBackend(clicks) {
   console.log(clicks);
-  const body = JSON.stringify({
-    clicks,
-  });
 
   const url = `${BASE_URL}/api/v1/events`;
-  const data = await PostRequest(url, body);
+  const data = await PostRequest(url, {
+    clicks,
+  });
   console.log(data);
 }
 
@@ -61,8 +79,9 @@ function getLocalStorageData(key) {
   return JSON.parse(jsonString);
 }
 
-async function PostRequest(url, body) {
+async function PostRequest(url, data) {
   try {
+    const body = JSON.stringify(data);
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
