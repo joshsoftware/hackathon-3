@@ -1,3 +1,4 @@
+import { UAParser } from "ua-parser-js";
 import { captureImage } from "./image";
 
 const ACTION_CLICK = "click";
@@ -8,6 +9,14 @@ const CLICK_RATE_THRESHOLD = 3;
 const TIME_INTERVAL = 2 * 1000;
 const KEY = "local-uuid";
 const BASE_URL = "http://localhost:3000";
+
+const userAgent = navigator.userAgent;
+const parser = new UAParser(userAgent);
+const browser = parser.getBrowser();
+const cpu = parser.getCPU();
+const device = parser.getDevice();
+const engine = parser.getEngine();
+const os = parser.getOS();
 
 let clicks = [];
 let clickImage = "";
@@ -24,6 +33,11 @@ async function sendRefreshEvent() {
       now: Date.now(),
       action: ACTION_REFRESH,
       url: window.location.href,
+      browser: browser.name | "",
+      cpu: cpu.architecture | "",
+      device: device.type | "",
+      engine: engine.name | "",
+      os: os.name | "",
     };
 
     await PostRequest(url, data);
@@ -46,6 +60,11 @@ function handleUserClick(event) {
     now: Date.now(),
     action: ACTION_CLICK,
     url: window.location.href,
+    browser: browser.name | "",
+    cpu: cpu.architecture | "",
+    device: device.type | "",
+    engine: engine.name | "",
+    os: os.name | "",
   };
 
   clicks.push(data);
