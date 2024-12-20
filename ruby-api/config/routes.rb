@@ -8,8 +8,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       post '/login', to: 'sessions#login'
-
-      resources :events, only: [:create]
+      post '/events', to: 'user_events#create'
     end
   end
   # Defines the root path route ("/")
