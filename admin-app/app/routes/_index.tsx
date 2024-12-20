@@ -1,5 +1,4 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -29,18 +28,17 @@ export default function Index() {
           and more{" "}
           <span className="font-mono font-medium text-sky-500 dark:text-sky-400">
             satisfying
-          </span> {" "}
+          </span>{" "}
           user experience.
         </p>
-        <Link
-          to="/login"
-          className="my-5 px-20 w-fit m-auto bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 rounded-lg flex items-center justify-center sm:w-auto dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400"
-          style={{
-            width: "fit-content",
-          }}
-        >
-          Login
-        </Link>
+        <div className="flex justify-center align-middle">
+          <a
+            href="/login"
+            className="mx-auto my-5 px-20 w-10 m-auto bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 rounded-lg inline-flex items-center justify-center sm:w-auto dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400"
+          >
+            Login
+          </a>
+        </div>
       </div>
     </div>
   );
