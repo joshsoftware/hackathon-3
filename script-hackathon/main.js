@@ -14,8 +14,8 @@ function sendRefreshEvent() {
   const url = `${BASE_URL}/api/v1/events`;
   try {
     const data = {
-      unique_identifier: getUniqueIdentifier(),
-      element_identifier: "",
+      uid: getUniqueIdentifier(),
+      element_id: "",
       now: Date.now(),
       action: ACTION_REFRESH,
       url: window.location.href,
@@ -33,11 +33,11 @@ setInterval(() => sendDataToBackend(clicks), TIME_INTERVAL);
 
 function handleUserClick(event) {
   const srcElement = event.srcElement;
-  const element_identifier = srcElement.textContent;
+  const element_id = srcElement.textContent;
 
   const data = {
-    unique_identifier: getUniqueIdentifier(),
-    element_identifier,
+    uid: getUniqueIdentifier(),
+    element_id,
     now: Date.now(),
     action: ACTION_CLICK,
     url: window.location.href,
