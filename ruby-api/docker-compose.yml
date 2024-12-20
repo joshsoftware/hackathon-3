@@ -14,7 +14,7 @@ services:
   # API server
   #
   web:
-    image: workbench/server
+    build: .
     command: bash -c "bundle && bundle exec puma -p 3000 -C ./config/puma.rb"
     volumes:
       - rails_cache:/srv/tmp/cache
