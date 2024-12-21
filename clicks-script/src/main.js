@@ -10,6 +10,8 @@ const BASE_URL = "http://127.0.0.1:3000";
 let clicks = [];
 let clickImage = "";
 
+const userAgent = navigator.userAgent;
+
 window.addEventListener("unload", sendRefreshEvent);
 window.addEventListener("beforeunload", sendRefreshEvent);
 
@@ -22,6 +24,7 @@ async function sendRefreshEvent() {
       now: Date.now(),
       action: ACTION_REFRESH,
       url: window.location.href,
+      user_agent: userAgent,
     };
 
     await MakeRequest("POST", url, data);
@@ -44,6 +47,7 @@ async function handleUserClick(event) {
     now: Date.now(),
     action: ACTION_CLICK,
     url: window.location.href,
+    user_agent: userAgent,
   };
 
   clicks.push(data);
