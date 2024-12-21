@@ -3,10 +3,10 @@ module Api
     class UserEventsController < ApplicationController
       def create
         events_data = create_params # Assuming the JSON body contains "clicks" key as shown in the example
-        service = EventsService::Create.new(events_data)
+        service = EventsService::Create.new(events_data).call
     
-        if service.call
-          render json: { message: "Events created successfully" }, status: :created
+        if service.present?
+          render json: { data: service, message: "Events created successfully" }, status: :created
         else
           render json: { error: "Failed to create events" }, status: :unprocessable_entity
         end

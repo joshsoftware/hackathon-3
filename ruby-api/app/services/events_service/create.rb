@@ -6,15 +6,18 @@ module EventsService
   
     def call
       ActiveRecord::Base.transaction do
+        rage_event_ids = []
         @events_params.each do |event_param|
           action = find_action(event_param)
           user_event_params = build_user_event_params(event_param, action)
           user_event = UserEvent.create!(user_event_params)
           
           if action.user_events.where(uid: event_param[:uid], captured_at: 5.seconds.ago..DateTime.current).count == 5
-            create_aggregate_event(user_event, action)
+            rage_click_event = create_aggregate_event(user_event, action)
+            rage_event_ids << rage_click_event.id
           end
         end
+        rage_event_ids
       end
     rescue ActiveRecord::RecordInvalid => e
       # Handle transaction failure if necessary (e.g., log or raise an error)
