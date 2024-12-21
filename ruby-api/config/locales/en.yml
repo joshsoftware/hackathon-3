@@ -29,3 +29,10 @@
 
 en:
   hello: "Hello world"
+  user_events:
+    success:
+      create: "Events created successfully"
+      get_metrics: "URLs processed successfully"
+    errors:
+      create: "Failed to create events"
+

@@ -1,10 +1,12 @@
 import { URLMetrics } from "~/lib/metrics";
 
 interface Props {
-  metric: URLMetrics;
+  metric: URLMetrics | null;
 }
 
 export default function Metric({ metric }: Props) {
+  if (!metric) return null;
+
   return (
     <div className="p-6 max-w-sm min-w-sm flex-grow-0 bg-white rounded-xl shadow-md space-y-4 border border-gray-200">
       <div>
