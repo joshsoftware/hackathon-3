@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rage Click Tester</title>
     <style>
+      #clock {
+        font-family: Arial, sans-serif;
+        font-size: 48px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin-top: 10%;
+      }
+
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -124,6 +133,22 @@
         <p>This is a modal window for testing clicks!</p>
       </div>
     </div>
+
+    <div id="clock"></div>
+
+    <script>
+      function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        const timeString = `${hours}:${minutes}:${seconds}`;
+        document.getElementById("clock").textContent = timeString;
+      }
+
+      setInterval(updateClock, 1000); // Update every second
+      updateClock(); // Initial call to display time immediately
+    </script>
 
     <script>
       function toggleSidePanel() {
