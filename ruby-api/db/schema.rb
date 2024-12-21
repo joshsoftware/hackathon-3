@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_20_222459) do
+ActiveRecord::Schema[7.2].define(version: 2024_12_21_100253) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,27 +31,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_20_222459) do
     t.datetime "updated_at", null: false
     t.index ["action_id"], name: "index_aggregate_events_on_action_id"
     t.index ["user_event_id"], name: "index_aggregate_events_on_user_event_id"
-  end
-
-  create_table "event_aggregations", force: :cascade do |t|
-    t.string "url"
-    t.string "element_id"
-    t.string "action"
-    t.integer "occurrences"
-    t.integer "duration"
-    t.integer "event_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "events", force: :cascade do |t|
-    t.string "uid"
-    t.string "action"
-    t.datetime "action_performed_at"
-    t.string "url"
-    t.string "element_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "user_events", force: :cascade do |t|
