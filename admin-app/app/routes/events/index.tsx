@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "react-query";
+import { BrowserIcon, BrowserTypes } from "~/shared/browser";
 import { DataTable } from "~/shared/data-table";
 
 export type Event = {
@@ -48,12 +49,27 @@ export const columns: ColumnDef<Event>[] = [
             {row.original.element.length < 100
               ? row.original.element
               : row.original.element.slice(0, 100)}
-            ...
+            <div className="flex flex-col gap-2 ">
+              <p className="text-lg font-semibold capitalize">
+                {row.original?.action?.action}:{row.original.element}
+              </p>
+              <Link to={row.original.url}>{row.original.url}</Link>
+            </div>
           </p>
-          <Link to={row.original.url}>{row.original.url}</Link>
         </div>
       );
     },
+  },
+  {
+    accessorKey: "browsers",
+    header: "Browsers",
+    cell: ({ row }) => (
+      <div className="flex flex-wrap gap-1">
+        {(row.original.browsers || []).map((browser, index) => (
+          <BrowserIcon key={index} browser={browser as BrowserTypes} />
+        ))}
+      </div>
+    ),
   },
   {
     accessorKey: "action_id",
@@ -61,7 +77,7 @@ export const columns: ColumnDef<Event>[] = [
     cell: ({ row }) => (
       <Link
         to={`/events/${row.original.action_id}`}
-        className="px-4 py-2 text-white bg-slate-900 rounded hover:bg-slate-700"
+        className="px-4 py-2 text-white bg-slate-900 rounded hover:bg-slate-700 "
       >
         View
       </Link>
@@ -86,7 +102,7 @@ export default function EventsIndex() {
   console.log(typeof data, data);
 
   return (
-    <div className="container mx-auto py-5 px-40">
+    <div className="container mx-auto py-5 px-30">
       <h2 className="text-2xl font-bold text-black-900 pb-2">Rage Events</h2>
       <div className="overflow-x-auto rounded-lg">
         {data.length > 0 ? (

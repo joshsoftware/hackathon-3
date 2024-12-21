@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
@@ -24,7 +25,17 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export async function clientLoader() {
+  const userToken = localStorage.getItem("AUTH_TOKEN");
+  if (!userToken) return null;
+
+  return { userToken };
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const data = useLoaderData<typeof clientLoader>();
+  const userToken = data ? data.userToken : null;
+
   const queryClient = new QueryClient();
   return (
     <html lang="en">
@@ -34,9 +45,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="bg-slate-50 min-h-screen text-black-900">
+      <body className="bg-blue-50 min-h-screen text-black-900">
         <QueryClientProvider client={queryClient}>
-          <Header />
+          <Header userToken={userToken} />
           {children}
         </QueryClientProvider>
         <ScrollRestoration />
