@@ -3,8 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Side Panel with Modal</title>
+    <title>Rage Click Tester</title>
     <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 1rem;
+        background-color: #f4f4f9;
+        color: #333;
+      }
+
       .side-panel {
         position: fixed;
         top: 0;
@@ -24,16 +32,36 @@
         display: block;
       }
 
+      .side-panel h2 {
+        margin: 0 0 20px;
+      }
+
       .side-panel button {
+        display: block;
         background-color: #4caf50;
         color: white;
         padding: 10px;
+        margin: 10px 0;
         border: none;
         cursor: pointer;
+        text-align: center;
       }
 
       .side-panel button:hover {
         background-color: #45a049;
+      }
+
+      .toggle-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .toggle-btn:hover {
+        background-color: #0056b3;
       }
 
       /* Modal Styling */
@@ -54,6 +82,11 @@
         padding: 20px;
         border-radius: 5px;
         width: 400px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .modal-content h2 {
+        margin-top: 0;
       }
 
       .close {
@@ -61,57 +94,53 @@
         float: right;
         font-size: 28px;
         font-weight: bold;
+        cursor: pointer;
       }
 
-      .close:hover,
-      .close:focus {
+      .close:hover {
         color: black;
-        text-decoration: none;
-        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <!-- Side Panel -->
-    <div class="side-panel" id="sidePanel">
-      <h2>Side Panel</h2>
-      <button id="openModalBtn">Open Modal</button>
+    <h1>Rage Clicks</h1>
+    <button class="toggle-btn" onclick="toggleSidePanel()">
+      Toggle Side Panel
+    </button>
 
-      <button onclick="toggleSidePanel()">Toggle Side Panel</button>
+    <div class="side-panel" id="sidePanel">
+      <h2>Test Rage Click</h2>
+      <button id="btn1">Button 1</button>
+      <button id="btn2">Button 2</button>
+      <button id="btn3">Button 3</button>
+      <button id="openModalBtn">Open Modal</button>
+      <button onclick="toggleSidePanel()">Close Panel</button>
     </div>
 
-    <!-- Button to Open Side Panel -->
-    <button onclick="toggleSidePanel()">Toggle Side Panel</button>
-
-    <!-- Modal -->
     <div id="myModal" class="modal">
       <div class="modal-content">
         <span class="close" id="closeModalBtn">&times;</span>
         <h2>Modal Title</h2>
-        <p>This is a modal window!</p>
+        <p>This is a modal window for testing clicks!</p>
       </div>
     </div>
 
     <script>
-      // Toggle side panel
       function toggleSidePanel() {
         const sidePanel = document.getElementById("sidePanel");
         sidePanel.classList.toggle("open");
       }
 
-      // Open modal
       document.getElementById("openModalBtn").onclick = function () {
         setTimeout(() => {
           document.getElementById("myModal").style.display = "flex";
         }, 2000);
       };
 
-      // Close modal
       document.getElementById("closeModalBtn").onclick = function () {
         document.getElementById("myModal").style.display = "none";
       };
 
-      // Close modal when clicking outside the modal content
       window.onclick = function (event) {
         if (event.target == document.getElementById("myModal")) {
           document.getElementById("myModal").style.display = "none";
