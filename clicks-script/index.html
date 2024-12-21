@@ -3,13 +3,121 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Page</title>
+    <title>Side Panel with Modal</title>
+    <style>
+      .side-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        background-color: #333;
+        color: white;
+        padding: 20px;
+        display: none;
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(-100%);
+      }
+
+      .side-panel.open {
+        transform: translateX(0);
+        display: block;
+      }
+
+      .side-panel button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .side-panel button:hover {
+        background-color: #45a049;
+      }
+
+      /* Modal Styling */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        width: 400px;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <h1>Test page</h1>
+    <!-- Side Panel -->
+    <div class="side-panel" id="sidePanel">
+      <h2>Side Panel</h2>
+      <button id="openModalBtn">Open Modal</button>
 
-    <button>Good Button</button>
-    <button>Bad Button</button>
+      <button onclick="toggleSidePanel()">Toggle Side Panel</button>
+    </div>
+
+    <!-- Button to Open Side Panel -->
+    <button onclick="toggleSidePanel()">Toggle Side Panel</button>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeModalBtn">&times;</span>
+        <h2>Modal Title</h2>
+        <p>This is a modal window!</p>
+      </div>
+    </div>
+
+    <script>
+      // Toggle side panel
+      function toggleSidePanel() {
+        const sidePanel = document.getElementById("sidePanel");
+        sidePanel.classList.toggle("open");
+      }
+
+      // Open modal
+      document.getElementById("openModalBtn").onclick = function () {
+        setTimeout(() => {
+          document.getElementById("myModal").style.display = "flex";
+        }, 2000);
+      };
+
+      // Close modal
+      document.getElementById("closeModalBtn").onclick = function () {
+        document.getElementById("myModal").style.display = "none";
+      };
+
+      // Close modal when clicking outside the modal content
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("myModal")) {
+          document.getElementById("myModal").style.display = "none";
+        }
+      };
+    </script>
 
     <script type="module" src="/src/main.js"></script>
   </body>
