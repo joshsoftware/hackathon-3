@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { useIsLoggedIn } from "~/shared/hooks/useIsLoggedIn";
 
 export const meta: MetaFunction = () => {
   return [
@@ -8,6 +9,8 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const isLoggedIn = useIsLoggedIn();
+
   return (
     <div className="flex items-center justify-center bg-slate-50">
       <div className="relative max-w-5xl mx-auto pt-20 sm:pt-24 lg:pt-32">
@@ -32,12 +35,21 @@ export default function Index() {
           user experience.
         </p>
         <div className="flex justify-center align-middle">
-          <a
-            href="/login"
-            className="mx-auto my-5 px-20 w-10 m-auto bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 rounded-lg inline-flex items-center justify-center sm:w-auto dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400"
-          >
-            Login
-          </a>
+          {isLoggedIn ? (
+            <a
+              href="/events"
+              className="mx-auto my-5 px-20 w-10 m-auto bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 rounded-lg inline-flex items-center justify-center sm:w-auto dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400"
+            >
+              Events
+            </a>
+          ) : (
+            <a
+              href="/login"
+              className="mx-auto my-5 px-20 w-10 m-auto bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 rounded-lg inline-flex items-center justify-center sm:w-auto dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400"
+            >
+              Login
+            </a>
+          )}
         </div>
       </div>
     </div>
