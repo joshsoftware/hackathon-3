@@ -5,7 +5,7 @@ module LighthouseService
     encoded_url = URI.encode_www_form_component(url)
     
     # Run Lighthouse in headless mode and capture JSON output
-    lighthouse_output = `lighthouse #{url} --output json --quiet --chrome-flags="--headless"`
+    lighthouse_output = `lighthouse #{encoded_url} --output json --quiet --chrome-flags="--headless"`
 
     # Parse the JSON output
     begin
@@ -13,7 +13,7 @@ module LighthouseService
     rescue JSON::ParserError => e
       p e.message
       # Rails.logger.error("Failed to parse Lighthouse output: #{e.message}")
-      return nil
+      return { url: url, error: "Failed to parse Lighthouse output" }
     end
 
     # Extract relevant metrics

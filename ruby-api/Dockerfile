@@ -1,6 +1,6 @@
 FROM ruby:3.3-slim
 
-ENV RUNTIME_DEPS imagemagick libmagickwand-dev file tzdata postgresql-client nodejs shared-mime-info
+ENV RUNTIME_DEPS imagemagick libmagickwand-dev file tzdata postgresql-client nodejs npm shared-mime-info
 ENV BUILD_DEPS build-essential libcurl4-openssl-dev git libxml2-dev libxslt-dev libpq-dev libicu-dev libvips42
 
 ENV APP_HOME /srv
@@ -12,6 +12,7 @@ RUN gem update --system && gem install bundler
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 
+RUN npm install -g lighthouse
 ADD Gemfile* $APP_HOME
 
 RUN bundle install --jobs 4 --retry 5

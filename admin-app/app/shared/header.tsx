@@ -1,26 +1,38 @@
 import { Link, useNavigate } from "@remix-run/react";
-import { useIsLoggedIn } from "./hooks/useIsLoggedIn";
+import { LogOutIcon } from "lucide-react";
 
-export default function Header() {
+export default function Header({ userToken }: { userToken: string | null }) {
   const navigate = useNavigate();
-  const isLoggedIn = useIsLoggedIn();
 
   return (
     <header className="text-primary-background">
       <div className="container mx-auto px-4 py-4 flex justify-between">
-        <Link to="/" className="text-2xl font-bold">
-          <h1 className="text-2xl font-bold">Speedsters</h1>
+        <Link to="/" className="text-2xl font-bold flex items-center gap-1">
+          <img
+            src="logo.png"
+            alt="Trackters"
+            width={60}
+            height={42}
+            className="rotate-90"
+          />
+          <h1 className="text-2xl font-bold">Trackster</h1>
         </Link>
 
-        {isLoggedIn ? (
-          <div className="flex gap-4 justify-center align-middle">
+        {userToken ? (
+          <div className="flex gap-4 justify-center items-center">
             <div>
-              <Link to="/events" className="block">
+              <Link
+                to="/events"
+                className="block with-border px-4 hover:bg-slate-300 rounded p-3"
+              >
                 Events
               </Link>
             </div>
             <div>
-              <Link to="/metrics" className="block">
+              <Link
+                to="/metrics"
+                className="block px-2 hover:bg-slate-300 rounded p-3"
+              >
                 Metrics
               </Link>
             </div>
@@ -32,15 +44,16 @@ export default function Header() {
                     replace: true,
                   });
                 }}
-                className="block"
               >
-                Logout
+                <LogOutIcon />
               </button>
             </div>
           </div>
         ) : (
           <div>
-            <Link to="/login">Login</Link>
+            <Link className="text-bold" to="/login">
+              Login
+            </Link>
           </div>
         )}
       </div>

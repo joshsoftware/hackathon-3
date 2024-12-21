@@ -5,7 +5,7 @@ export const useIsLoggedIn = () => {
   useEffect(() => {
     const token = localStorage.getItem("AUTH_TOKEN");
     setIsLoggedIn(!!token);
-  }, []);
+  }, [isLoggedIn]);
 
   return isLoggedIn;
 };

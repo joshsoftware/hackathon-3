@@ -74,7 +74,9 @@ export const columns: ColumnDef<Event>[] = [
     }) => {
       return (
         <div className="flex space-x-2">
-          {user_agent === "" ? "laptop" : new UAParser(user_agent).getDevice().type}
+          {user_agent === ""
+            ? "laptop"
+            : new UAParser(user_agent).getDevice().type}
         </div>
       );
     },
@@ -115,8 +117,10 @@ function VerticalKeyValueList({
       className={cn("m-0 block text-base", className)}
       data-cname="VerticalKeyValueList"
     >
-      {items.map(({ value }, index) => (
+      {items.map(({ label, value }, index) => (
         <div key={index} className="mt-1 flex flex-row items-start first:mt-0">
+          <dd className="w-1/3 text-gray-900">{label}</dd>
+
           <dd className="w-2/3">{value}</dd>
         </div>
       ))}
@@ -126,7 +130,7 @@ function VerticalKeyValueList({
 
 function Breadcrumb() {
   return (
-    <nav className="px-12 text-sm font-medium mb-0 flex items-center py-4 my-0">
+    <nav className="px-16 text-sm font-medium mb-0 flex items-center py-4 my-0">
       <Link to="/events" className="text-blue-600 hover:underline">
         Events
       </Link>
@@ -178,7 +182,9 @@ export default function EventsIndex() {
               className="mt-2"
             />
           </div>
-          <div className={cn("font-bold text-4xl pr-20 absolute right-2", color)}>
+          <div
+            className={cn("font-bold text-4xl pr-20 absolute right-2", color)}
+          >
             {events.length}
           </div>
         </div>
