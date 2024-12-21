@@ -11,7 +11,7 @@ export default function MetricsIndex() {
 
   const [state, setState] = useState<
     "NORMAL" | "LOADING" | "METRICS" | "ERROR"
-  >("METRICS");
+  >("NORMAL");
 
   const addUrl = () => {
     if (!url || url === "") {
