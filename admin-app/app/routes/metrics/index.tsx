@@ -43,6 +43,8 @@ export default function MetricsIndex() {
 
     try {
       const data = await getMetrics(urls);
+      if (!data) return;
+
       setMetrics(data);
     } catch (error) {
       setState("ERROR");

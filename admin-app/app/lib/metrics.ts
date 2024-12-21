@@ -1,3 +1,5 @@
+import { axiosBasic } from "utils/axios/axios";
+
 export type URLMetrics = {
   url: string;
   performance: number;
@@ -7,17 +9,18 @@ export type URLMetrics = {
   pwa: number;
 };
 
-export const getMetrics = async (urls: string[]): Promise<URLMetrics[]> => {
-  const metrics = urls.map((url) => {
-    return {
-      url: url,
-      performance: 0,
-      accessibility: 0,
-      bestPractices: 0,
-      seo: 0,
-      pwa: 0,
-    };
-  });
+export const getMetrics = async (
+  urls: string[]
+): Promise<URLMetrics[] | null> => {
+  const body = {
+    urls: urls,
+  };
 
-  return metrics;
+  type response = {
+    data: URLMetrics[] | null;
+  };
+
+  return axiosBasic
+    .post<response>("/api/v1/metrics", body)
+    .then((response) => response.data.data);
 };
