@@ -224,10 +224,18 @@ function ScreenshotCell({ row }: { row: any }) {
       )}
       {isModalOpen && selectedImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center shadow-sm bg-white border-white bg-opacity-50">
-          <div className="relative">
+          <div
+            className="relative m-h-[50%]"
+            style={{
+              maxHeight: "50%",
+              overflow: "hidden",
+              border: "3px solid black",
+              borderRadius: "10px",
+            }}
+          >
             <div className="bg-white relative w-full h-full max-w-4xl max-h-4xl">
               <img
-                className="w-full h-full object-cover"
+                className="w-fit h-fit object-cover"
                 src={selectedImage}
                 alt="screenshot preview"
               />
