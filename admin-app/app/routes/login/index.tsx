@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useLoginMutations } from "./hooks";
+import { useNavigate } from "@remix-run/react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
