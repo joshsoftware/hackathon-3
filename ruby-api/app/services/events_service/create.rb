@@ -9,10 +9,12 @@ module EventsService
         rage_event_ids = []
         @events_params.each do |event_param|
           action = find_action(event_param)
+
           user_event_params = build_user_event_params(event_param, action)
           user_event = UserEvent.create!(user_event_params)
-          
-          if action.user_events.where(uid: event_param[:uid], captured_at: 5.seconds.ago..DateTime.current).count == 5
+
+          res = action&.user_events&.where(uid: event_param[:uid], captured_at: 5.seconds.ago..user_event.captured_at.to_datetime.utc)
+          if res && res.count == 5
             rage_click_event = create_aggregate_event(user_event, action)
             rage_event_ids << rage_click_event.id
           end

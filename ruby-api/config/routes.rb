@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post '/events', to: 'user_events#create'
       post '/metrics', to: 'user_events#get_metrics'
       resources :aggregate_events, only: [:index]
+      put '/aggregate_events', to: 'aggregate_events#update_all'
     end
   end
   # Defines the root path route ("/")

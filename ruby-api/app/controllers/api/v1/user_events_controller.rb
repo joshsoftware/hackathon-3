@@ -7,11 +7,7 @@ module Api
         events_data = create_params # Assuming the JSON body contains "clicks" key as shown in the example
         service = EventsService::Create.new(events_data).call
     
-        if service.present?
-          render json: { data: service, message: I18n.t('user_events.success.create') }, status: :created
-        else
-          render json: { error: I18n.t('user_events.errors.create') }, status: :unprocessable_entity
-        end
+        render json: { data: service, message: "Events created successfully" }, status: :created
       end
 
       def get_metrics
