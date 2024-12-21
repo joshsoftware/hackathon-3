@@ -13,13 +13,24 @@ module EventsService
           user_event_params = build_user_event_params(event_param, action)
           user_event = UserEvent.create!(user_event_params)
 
+          user_events = []
+          user_events << user_event
+          user_event_hashes = user_events.map(&:attributes)
+          rage_click = RageClickService::Detector.new().analyze_clicks(user_event_hashes)
+
+          if rage_click.rage_clicks.present?
+            aggregate_event_param = aggregate_event_params(rage_click.rage_clicks)
+            aggregate_event_param.each do |param|
+              AggregateEvent.create!(param) 
+            end
+          end
+
           res = action&.user_events&.where(uid: event_param[:uid], captured_at: 5.seconds.ago..user_event.captured_at.to_datetime.utc)
           if res && res.count == 5
             rage_click_event = create_aggregate_event(user_event, action)
             rage_event_ids << rage_click_event.id
           end
         end
-        rage_event_ids
       end
     rescue ActiveRecord::RecordInvalid => e
       # Handle transaction failure if necessary (e.g., log or raise an error)
@@ -27,6 +38,10 @@ module EventsService
     end
 
     private
+
+    def aggregate_event_params(rage_clicks)
+      rage_clicks.map { |hash| hash.slice(:action_id, :uid) }
+    end
 
     def find_action(param)
       Action.find_or_create_by(url: param[:url], element: param[:element_id], action: param[:action])
