@@ -1,4 +1,4 @@
-  [1m[35m (96.4ms)[0m  [1m[35mCREATE DATABASE "speedsters_backend_development" ENCODING = 'unicode' TEMPLATE = "template0"[0m
+[1m[35m (96.4ms)[0m  [1m[35mCREATE DATABASE "speedsters_backend_development" ENCODING = 'unicode' TEMPLATE = "template0"[0m
   [1m[35m (56.9ms)[0m  [1m[35mCREATE DATABASE "speedsters_backend_test" ENCODING = 'unicode' TEMPLATE = "template0"[0m
   [1m[35m (5.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
   [1m[35m (3.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
