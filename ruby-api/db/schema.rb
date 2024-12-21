@@ -33,6 +33,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_21_100253) do
     t.index ["user_event_id"], name: "index_aggregate_events_on_user_event_id"
   end
 
+  create_table "images", force: :cascade do |t|
+    t.string "attachement"
+    t.bigint "event_aggregation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_aggregation_id"], name: "index_images_on_event_aggregation_id"
+  end
+
   create_table "user_events", force: :cascade do |t|
     t.datetime "captured_at"
     t.text "user_agent"

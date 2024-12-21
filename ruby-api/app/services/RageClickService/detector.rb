@@ -25,7 +25,7 @@ module RageClickService
         if rage_click?(interactions)
           results << {
             action_id: action_id,
-            uid: interactions.first["uid".to_sym],
+            uid: interactions.first["uid"],
             confidence_score: calculate_confidence_score(interactions),
             total_clicks: interactions.length,
             avg_time_between_clicks: average_time_between_clicks(interactions)
@@ -59,21 +59,21 @@ module RageClickService
     required_fields = ['uid', 'captured_at', 'action_id']
     
     required_fields.each do |field|
-      if row[field.to_sym].nil?
+      if row[field].nil?
         raise InvalidDataError, "Missing required field '#{field}' at index #{index}"
       end
     end
     
     # Validate timestamp format
     begin
-      DateTime.parse(row['captured_at'.to_sym].to_s)
+      DateTime.parse(row['captured_at'].to_s)
     rescue ArgumentError
       raise InvalidDataError, "Invalid timestamp format at index #{index}"
     end
   end
 
   def grouped_by_user_action(data)
-    data.group_by { |row| [row['action_id'.to_sym]] }
+    data.group_by { |row| [row['action_id']] }
   end
 
   def parse_timestamp(timestamp_str)
@@ -88,7 +88,7 @@ module RageClickService
 
     # Sort interactions by timestamp
     sorted_interactions = interactions
-      .map { |i| [i, parse_timestamp(i['captured_at'.to_sym])] }
+      .map { |i| [i, parse_timestamp(i['captured_at'])] }
       .reject { |_, timestamp| timestamp.nil? }
       .sort_by { |_, timestamp| timestamp }
       .map(&:first)
@@ -97,8 +97,8 @@ module RageClickService
     
     # Check for rapid successive clicks within time window
     sorted_interactions.each_cons(min_clicks) do |window|
-      first_time = parse_timestamp(window.first['captured_at'.to_sym])
-      last_time = parse_timestamp(window.last['captured_at'.to_sym])
+      first_time = parse_timestamp(window.first['captured_at'])
+      last_time = parse_timestamp(window.last['captured_at'])
       
       next if first_time.nil? || last_time.nil?
       
@@ -112,7 +112,7 @@ module RageClickService
   def calculate_confidence_score(interactions)
     # Sort interactions by timestamp
     sorted_interactions = interactions
-      .map { |i| [i, parse_timestamp(i['captured_at'.to_sym])] }
+      .map { |i| [i, parse_timestamp(i['captured_at'])] }
       .reject { |_, timestamp| timestamp.nil? }
       .sort_by { |_, timestamp| timestamp }
       .map(&:first)
@@ -139,7 +139,7 @@ module RageClickService
   def calculate_click_frequency_score(interactions)
     return 0.0 if interactions.length < 2
     
-    times = interactions.map { |i| parse_timestamp(i['captured_at'.to_sym]) }.compact
+    times = interactions.map { |i| parse_timestamp(i['captured_at']) }.compact
     return 0.0 if times.length < 2
     
     intervals = times.each_cons(2).map { |t1, t2| ((t2 - t1) * 24 * 60 * 60).to_i }
@@ -155,7 +155,7 @@ module RageClickService
   def calculate_click_consistency_score(interactions)
     return 0.0 if interactions.length < 3
     
-    times = interactions.map { |i| parse_timestamp(i['captured_at'.to_sym]) }.compact
+    times = interactions.map { |i| parse_timestamp(i['captured_at']) }.compact
     return 0.0 if times.length < 3
     
     intervals = times.each_cons(2).map { |t1, t2| ((t2 - t1) * 24 * 60 * 60).to_i }
@@ -180,7 +180,7 @@ module RageClickService
   def average_time_between_clicks(interactions)
     return 0.0 if interactions.length < 2
     
-    times = interactions.map { |i| parse_timestamp(i['captured_at'.to_sym]) }.compact
+    times = interactions.map { |i| parse_timestamp(i['captured_at']) }.compact
     return 0.0 if times.length < 2
     
     intervals = times.each_cons(2).map { |t1, t2| ((t2 - t1) * 24 * 60 * 60).to_i }
