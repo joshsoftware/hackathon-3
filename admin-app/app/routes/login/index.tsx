@@ -17,7 +17,7 @@ export default function Login() {
       {
         onSuccess: (response) => {
           if (!response) {
-            setError("error while login");
+            setError("Invalid Username or Password");
             return;
           }
 
@@ -26,7 +26,7 @@ export default function Login() {
         },
         onError: (error) => {
           console.log(error);
-          setError("error while login");
+          setError("Invalid Username or Password");
         },
       }
     );
@@ -38,7 +38,6 @@ export default function Login() {
         <h1 className="text-2xl font-semibold text-center text-gray-800 mb-4">
           Login
         </h1>
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
         <form method="post" onSubmit={handleLogin} className="space-y-4">
           <div>
@@ -70,6 +69,10 @@ export default function Login() {
               required
             />
           </div>
+
+          {error && (
+            <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+          )}
 
           <button
             type="submit"

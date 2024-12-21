@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
-import { ChevronsRight, CircleX } from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "~/shared/data-table";
 import { Link, useParams } from "@remix-run/react";
+import { ColumnDef } from "@tanstack/react-table";
+import { ChevronsRight, CircleX } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
+import { UAParser } from "ua-parser-js";
 import { cn } from "~/lib/utils";
-import { IResult, UAParser } from "ua-parser-js";
+import { DataTable } from "~/shared/data-table";
 
 type Event = {
   id: string;
@@ -74,7 +74,7 @@ export const columns: ColumnDef<Event>[] = [
     }) => {
       return (
         <div className="flex space-x-2">
-          {user_agent === "" ? "" : new UAParser(user_agent).getDevice().type}
+          {user_agent === "" ? "laptop" : new UAParser(user_agent).getDevice().type}
         </div>
       );
     },
@@ -115,13 +115,9 @@ function VerticalKeyValueList({
       className={cn("m-0 block text-base", className)}
       data-cname="VerticalKeyValueList"
     >
-      {items.map(({ label, value }, index) => (
-        <div
-          key={index}
-          className="mt-1 flex flex-row min-h-8 items-start first:mt-0"
-        >
-          <dt className="font-bold w-1/3">{label}</dt>
-          <dd className="ml-2 w-2/3">{value}</dd>
+      {items.map(({ value }, index) => (
+        <div key={index} className="mt-1 flex flex-row items-start first:mt-0">
+          <dd className="w-2/3">{value}</dd>
         </div>
       ))}
     </dl>
@@ -130,7 +126,7 @@ function VerticalKeyValueList({
 
 function Breadcrumb() {
   return (
-    <nav className="text-sm font-medium mb-4 flex items-center mx-16 px-4 py-4 my-4">
+    <nav className="px-12 text-sm font-medium mb-0 flex items-center py-4 my-0">
       <Link to="/events" className="text-blue-600 hover:underline">
         Events
       </Link>
@@ -168,22 +164,23 @@ export default function EventsIndex() {
   return (
     <>
       <Breadcrumb />
-
       <div className="container flex justify-between mx-auto px-4 py-4 my-4 shadow-sm bg-white rounded-md text-primary-background">
-        <div className="flex flex-col w-1/2">
-          <h1 className="text-3xl font-bold capitalize pb-4">{`${
-            data.action ?? ""
-          }: ${data.element}`}</h1>
-          <VerticalKeyValueList
-            items={[
-              { label: "Url", value: data.url },
-              { label: "Browsers", value: (data?.browsers || []).join(", ") },
-            ]}
-            className="mt-2"
-          />
-        </div>
-        <div className={cn("font-bold text-4xl pr-20", color)}>
-          {events.length}
+        <div className="flex flex-grow">
+          <div className="flex flex-col w-1/2">
+            <h1 className="text-3xl font-bold capitalize pb-4">{`${
+              data.action ?? ""
+            }: ${data.element}`}</h1>
+            <VerticalKeyValueList
+              items={[
+                { label: "Url", value: data.url },
+                { label: "Browsers", value: (data?.browsers || []).join(", ") },
+              ]}
+              className="mt-2"
+            />
+          </div>
+          <div className={cn("font-bold text-4xl pr-20 absolute right-2", color)}>
+            {events.length}
+          </div>
         </div>
       </div>
 

@@ -39,33 +39,21 @@ export const columns: ColumnDef<Event>[] = [
   },
   {
     accessorKey: "action",
-    header: "Details",
+    header: "Info",
     cell: ({ row }) => {
       return (
         <div>
           <p className="text-lg">
-            {row.original?.action?.action}:{row.original.element}
+            {row.original?.action?.action}:
+            {row.original.element.length < 100
+              ? row.original.element
+              : row.original.element.slice(0, 100)}
+            ...
           </p>
-          <p>{row.original.url}</p>
+          <Link to={row.original.url}>{row.original.url}</Link>
         </div>
       );
     },
-  },
-  {
-    accessorKey: "browsers",
-    header: "Browsers",
-    cell: ({ row }) => (
-      <div className="flex flex-wrap gap-1">
-        {(row.original.browsers || []).map((browser, index) => (
-          <span
-            key={index}
-            className="px-2 py-1 bg-blue-100 text-blue-700 rounded"
-          >
-            {browser}
-          </span>
-        ))}
-      </div>
-    ),
   },
   {
     accessorKey: "action_id",
