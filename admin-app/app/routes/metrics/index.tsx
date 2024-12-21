@@ -2,6 +2,7 @@ import { useState } from "react";
 import Metric from "~/components/ui/metric";
 import { getMetrics, URLMetrics } from "~/lib/metrics";
 import { isValidURL } from "~/lib/utils";
+import "./index.css";
 
 export default function MetricsIndex() {
   const [url, setUrl] = useState<string>("");
@@ -125,8 +126,8 @@ export default function MetricsIndex() {
       )}
 
       {state === "LOADING" && (
-        <div className="container mx-auto py-5 px-40">
-          <h1>Loading...</h1>
+        <div className="flex justify-center items-center my-[15%]">
+          <div className="loader"></div>
         </div>
       )}
 
