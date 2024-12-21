@@ -22,6 +22,22 @@ module Api
           message: "Updated successfully"
         }, status: :ok
       end
+
+      
+      def show
+        action = Action.find(params[:id])
+        user_events = action.aggregate_events.includes(:user_event).map do |ae|
+          {
+            captured_at: ae.user_event.captured_at,
+            user_agent: ae.user_event.user_agent,
+            screenshot: ae.screenshot,
+          }
+        end
+
+        render json: action.as_json.merge(
+           user_events: user_events
+        ) 
+      end
   
       private
   

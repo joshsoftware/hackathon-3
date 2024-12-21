@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { ArrowLeft, ChevronRight, ChevronsRight, CircleX } from "lucide-react";
+import { useState, useMemo } from "react";
+import { ChevronsRight, CircleX } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Table } from "../../components/ui/table";
 import { DataTable } from "~/shared/data-table";
-import { Link } from "react-router-dom"; // Assuming you are using react-router
+import { Link, useParams } from "@remix-run/react";
+import { useQuery } from "react-query";
+import { cn } from "~/lib/utils";
 
 type Event = {
   id: string;
   url: string;
   action: string;
-  timestamp: string;
+  captured_at: string;
   browsers: string[];
   screenshot?: string;
 };
@@ -20,35 +21,6 @@ export type EventDetails = {
   element: string;
   browsers: string[];
   userEvents?: Event[];
-};
-
-export const event = {
-  action: "view",
-  url: "/events",
-  element: "button",
-  browsers: ["chrome", "firefox"],
-  userEvents: [
-    {
-      id: "1",
-      ip: 123456,
-      url: "/events",
-      action: "view",
-      timestamp: "2021-01-01T00:00:00",
-      browsers: ["chrome"],
-      os: "windows",
-      screenshot: "https://placehold.co/400",
-    },
-    {
-      id: "2",
-      ip: 123456,
-      url: "/events",
-      action: "view",
-      timestamp: "2021-01-01T00:00:00",
-      browsers: ["firefox"],
-      os: "mac",
-      screenshot: "https://placehold.co/400",
-    },
-  ],
 };
 
 const browserIcons: { [key: string]: string } = {
@@ -62,42 +34,50 @@ export const columns: ColumnDef<Event>[] = [
     header: "Capture Time",
     cell: ({
       row: {
-        original: { timestamp },
+        original: { captured_at },
       },
-    }) => new Date(timestamp).toLocaleString(),
+    }) => {
+      const date = new Date(captured_at);
+      return (
+        <div>
+          <div>{date.toLocaleDateString()}</div>
+          <div>
+            {date.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })}
+          </div>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "browsers",
     header: "Browsers",
     cell: ({
       row: {
-        original: { browsers },
+        original: { browsers = [] },
       },
-    }) => (
-      <div className="flex space-x-2">
-        {browsers.map((browser: string) => (
-          <img
-            key={browser}
-            src={browserIcons[browser] || ""}
-            alt={browser}
-            className="w-8 h-8 object-cover"
-          />
-        ))}
-      </div>
-    ),
+    }) => {
+      if (!browsers.length) return null;
+      return (
+        <div className="flex space-x-2">
+          {browsers.map((browser: string) => (
+            <img
+              key={browser}
+              src={browserIcons[browser] || "https://placehold.co/400"}
+              alt={browser}
+              className="w-8 h-8 object-cover"
+            />
+          ))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "os",
     header: "OS",
-  },
-  {
-    accessorKey: "timestamp",
-    header: "Timestamp",
-    cell: ({
-      row: {
-        original: { timestamp },
-      },
-    }) => new Date(timestamp).toLocaleString(),
   },
   {
     accessorKey: "screenshot",
@@ -117,7 +97,7 @@ function VerticalKeyValueList({
 
   return (
     <dl
-      className={`m-0 block text-base ${className}`}
+      className={cn("m-0 block text-base", className)}
       data-cname="VerticalKeyValueList"
     >
       {items.map(({ label, value }, index) => (
@@ -135,11 +115,10 @@ function VerticalKeyValueList({
 
 function Breadcrumb() {
   return (
-    <nav className="text-sm font-medium mb-4 flex items-center mx-12 px-4 py-4 my-4">
+    <nav className="text-sm font-medium mb-4 flex items-center mx-16 px-4 py-4 my-4">
       <Link to="/events" className="text-blue-600 hover:underline">
         Events
       </Link>
-      {"  "}
       <ChevronsRight />
       <span>Event Details</span>
     </nav>
@@ -147,20 +126,50 @@ function Breadcrumb() {
 }
 
 export default function EventsIndex() {
-  const events = event.userEvents || [];
+  const { actionId } = useParams<"actionId">();
+
+  const { data = {} } = useQuery(["events", actionId], async () => {
+    const response = await fetch(
+      `http://localhost:3000/api/v1/aggregate_events/${actionId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("AUTH_TOKEN")}`,
+        },
+      }
+    );
+    return response.json();
+  });
+
+  const events = useMemo(() => (data.user_events as Event[]) || [], [data]);
+  const color = useMemo(() => {
+    return events.length > 10
+      ? "text-red-600"
+      : events.length > 5
+      ? "text-orange-500"
+      : "text-yellow-500";
+  }, [events.length]);
+
   return (
     <>
       <Breadcrumb />
 
-      <div className="container mx-auto px-4 py-4 my-4 bg-white rounded-md text-primary-background">
-        <h1 className="text-3xl font-bold capitalize">{`${event.action}: ${event.element}`}</h1>
-        <VerticalKeyValueList
-          items={[
-            { label: "Url", value: event.url },
-            { label: "Browsers", value: event.browsers.join(", ") },
-          ]}
-          className="mt-2"
-        />
+      <div className="container flex justify-between mx-auto px-4 py-4 my-4 shadow-sm bg-white rounded-md text-primary-background">
+        <div className="flex flex-col w-1/2">
+          <h1 className="text-3xl font-bold capitalize pb-4">{`${
+            data.action ?? ""
+          }: ${data.element}`}</h1>
+          <VerticalKeyValueList
+            items={[
+              { label: "Url", value: data.url },
+              { label: "Browsers", value: (data?.browsers || []).join(", ") },
+            ]}
+            className="mt-2"
+          />
+        </div>
+        <div className={cn("font-bold text-4xl pr-20", color)}>
+          {events.length}
+        </div>
       </div>
 
       <div className="container mx-auto py-10">
@@ -184,13 +193,10 @@ function ScreenshotCell({ row }: { row: any }) {
       {row.original?.screenshot && (
         <button
           className="w-24 h-24 object-cover cursor-pointer p-0 border-none bg-transparent"
-          onClick={() =>
-            row.original.screenshot && handleImageClick(row.original.screenshot)
-          }
+          onClick={() => handleImageClick(row.original.screenshot)}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
-              row.original.screenshot &&
-                handleImageClick(row.original.screenshot);
+              handleImageClick(row.original.screenshot);
             }
           }}
         >
@@ -202,19 +208,21 @@ function ScreenshotCell({ row }: { row: any }) {
         </button>
       )}
       {isModalOpen && selectedImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center shadow-sm bg-white border-white bg-opacity-50">
           <div className="relative">
-            <img
-              className="max-w-full max-h-full"
-              src={selectedImage}
-              alt="screenshot preview"
-            />
-            <button
-              className="absolute top-0 right-0 mt-2 mr-2 text-white"
-              onClick={() => setIsModalOpen(false)}
-            >
-              <CircleX className="text-black" />
-            </button>
+            <div className="bg-white relative w-full h-full max-w-4xl max-h-4xl">
+              <img
+                className="w-full h-full object-cover"
+                src={selectedImage}
+                alt="screenshot preview"
+              />
+              <button
+                className="absolute top-0 right-0 mt-2 mr-2 text-white"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <CircleX className="text-black" />
+              </button>
+            </div>
           </div>
         </div>
       )}
