@@ -5,7 +5,7 @@ module Api
   
       def index
         grouped_events = AggregateEvent.joins(:action, :user_event)
-                                      .group(:action_id)
+                                      .group('aggregate_events.action_id', 'actions.action', 'actions.url', 'actions.element', 'user_events.user_agent')
                                       .select(
                                         'aggregate_events.action_id, actions.action, actions.url, actions.element, user_events.user_agent, COUNT(aggregate_events.id) as rage_count'
                                       )
