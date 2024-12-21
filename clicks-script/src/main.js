@@ -39,7 +39,7 @@ setInterval(() => sendDataToBackend(clicks), TIME_INTERVAL);
 
 async function handleUserClick(event) {
   const srcElement = event.srcElement;
-  const element_id = srcElement.textContent.trim();
+  const element_id = `${srcElement.tagName.toLowerCase()}(${srcElement.textContent.trim()})`;
 
   const data = {
     uid: getUniqueIdentifier(),
