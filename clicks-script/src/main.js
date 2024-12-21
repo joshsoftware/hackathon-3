@@ -3,11 +3,9 @@ import { captureImage } from "./image";
 const ACTION_CLICK = "click";
 const ACTION_REFRESH = "refresh";
 
-const CLICK_RATE_THRESHOLD = 3;
-
 const TIME_INTERVAL = 2 * 1000;
 const KEY = "local-uuid";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://127.0.0.1:3000";
 
 let clicks = [];
 let clickImage = "";
@@ -26,7 +24,7 @@ async function sendRefreshEvent() {
       url: window.location.href,
     };
 
-    await PostRequest(url, data);
+    await MakeRequest("POST", url, data);
   } catch (error) {
     console.log(error);
   }
@@ -36,9 +34,9 @@ async function sendRefreshEvent() {
 window.addEventListener("click", handleUserClick);
 setInterval(() => sendDataToBackend(clicks), TIME_INTERVAL);
 
-function handleUserClick(event) {
+async function handleUserClick(event) {
   const srcElement = event.srcElement;
-  const element_id = srcElement.textContent;
+  const element_id = srcElement.textContent.trim();
 
   const data = {
     uid: getUniqueIdentifier(),
@@ -49,10 +47,7 @@ function handleUserClick(event) {
   };
 
   clicks.push(data);
-
-  if (clicks.length >= CLICK_RATE_THRESHOLD) {
-    clickImage = captureImage();
-  }
+  clickImage = await captureImage();
 }
 
 async function sendDataToBackend() {
@@ -61,17 +56,18 @@ async function sendDataToBackend() {
   }
 
   const url = `${BASE_URL}/api/v1/events`;
-  await PostRequest(url, { clicks });
+  const response = await MakeRequest("POST", url, { clicks });
+  const ids = response.data;
 
-  if (clickImage != "") {
-    const url = `${BASE_URL}/api/v1/image`;
+  if (clickImage != "" && ids?.length > 0) {
+    const url = `${BASE_URL}/api/v1/aggregate_events`;
 
     const body = {
-      url: window.location.href,
-      image: clickImage,
+      ids,
+      screenshot: clickImage,
     };
 
-    await PostRequest(url, body);
+    await MakeRequest("PUT", url, body);
   }
 
   // clear the clicks
@@ -102,11 +98,11 @@ function getLocalStorageData(key) {
   return JSON.parse(jsonString);
 }
 
-async function PostRequest(url, data) {
+async function MakeRequest(method, url, data) {
   try {
     const body = JSON.stringify(data);
     const response = await fetch(url, {
-      method: "POST",
+      method: method,
       headers: { "Content-Type": "application/json" },
       body: body,
     });
