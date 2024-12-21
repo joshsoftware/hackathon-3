@@ -9,9 +9,9 @@
         font-family: Arial, sans-serif;
         font-size: 48px;
         font-weight: bold;
-        color: #333;
+        color: #fff;
         text-align: center;
-        margin-top: 10%;
+        margin-top: 3rem;
       }
 
       body {
@@ -124,6 +124,8 @@
       <button id="btn3">Button 3</button>
       <button id="openModalBtn">Open Modal</button>
       <button onclick="toggleSidePanel()">Close Panel</button>
+
+      <div id="clock"></div>
     </div>
 
     <div id="myModal" class="modal">
@@ -133,8 +135,6 @@
         <p>This is a modal window for testing clicks!</p>
       </div>
     </div>
-
-    <div id="clock"></div>
 
     <script>
       function updateClock() {
