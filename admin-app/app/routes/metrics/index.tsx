@@ -5,13 +5,13 @@ import { isValidURL } from "~/lib/utils";
 import "./index.css";
 
 export default function MetricsIndex() {
-  const [url, setUrl] = useState<string>("");
+  const [url, setUrl] = useState<string>("https://localhost:3000");
   const [urls, setUrls] = useState<string[]>([]);
   const [metrics, setMetrics] = useState<URLMetrics[]>([]);
 
   const [state, setState] = useState<
     "NORMAL" | "LOADING" | "METRICS" | "ERROR"
-  >("NORMAL");
+  >("METRICS");
 
   const addUrl = () => {
     if (!url || url === "") {
