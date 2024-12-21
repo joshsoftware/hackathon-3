@@ -13,5 +13,11 @@ export type BrowserTypes = keyof typeof browserIcons;
 
 export const BrowserIcon = ({ browser }: { browser: BrowserTypes }) => {
   const icon = browserIcons[browser] || "default";
-  return <img src={`/icons/${icon}.png`} alt={browser} />;
+  return (
+    <img
+      src={`/icons/${icon}.png`}
+      alt={browser}
+      className="w-6 h-6 object-cover"
+    />
+  );
 };

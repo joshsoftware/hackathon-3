@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "react-query";
+import { UAParser } from "ua-parser-js";
 import { BrowserIcon, BrowserTypes } from "~/shared/browser";
 import { DataTable } from "~/shared/data-table";
 
@@ -32,7 +33,7 @@ export const columns: ColumnDef<Event>[] = [
           : "text-yellow-500";
 
       return (
-        <span className={`text-3xl font-bold ${color} block text-center`}>
+        <span className={`text-3xl ${color} block text-center`}>
           {rageCount}
         </span>
       );
@@ -44,15 +45,14 @@ export const columns: ColumnDef<Event>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          <p className="text-lg">
-            {row.original?.action?.action}:
-            {row.original.element.length < 100
-              ? row.original.element
-              : row.original.element.slice(0, 100)}
+          <p className="text-lg ">
+            <span className="font-bold capitalize">
+              {row.original?.action?.action}:
+              {row.original.element.length < 100
+                ? row.original.element
+                : row.original.element.slice(0, 100)}
+            </span>
             <div className="flex flex-col gap-2 ">
-              <p className="text-lg font-semibold capitalize">
-                {row.original?.action?.action}:{row.original.element}
-              </p>
               <Link to={row.original.url}>{row.original.url}</Link>
             </div>
           </p>
@@ -61,15 +61,12 @@ export const columns: ColumnDef<Event>[] = [
     },
   },
   {
-    accessorKey: "browsers",
+    accessorKey: "user_agent",
     header: "Browsers",
-    cell: ({ row }) => (
-      <div className="flex flex-wrap gap-1">
-        {(row.original.browsers || []).map((browser, index) => (
-          <BrowserIcon key={index} browser={browser as BrowserTypes} />
-        ))}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const browser = new UAParser(row.original.user_agent).getBrowser().name;
+      return <BrowserIcon browser={browser as BrowserTypes} />;
+    },
   },
   {
     accessorKey: "action_id",
