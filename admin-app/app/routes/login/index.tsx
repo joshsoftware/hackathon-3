@@ -12,19 +12,21 @@ export default function Login() {
   const handleLogin = (event: React.FormEvent) => {
     event.preventDefault();
 
-    console.log("login   ", email, password);
     login.mutate(
       { email, password },
       {
         onSuccess: (response) => {
-          console.log(response);
+          if (!response) {
+            setError("error while login");
+            return;
+          }
 
           navigate("/events");
           localStorage.setItem("AUTH_TOKEN", response.data.token);
         },
         onError: (error) => {
           console.log(error);
-          setError(error as string);
+          setError("error while login");
         },
       }
     );
