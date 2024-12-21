@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       post '/login', to: 'sessions#login'
 
       resources :events, only: [:create]
+      resources :aggregate_events, only: [:index]
     end
   end
   # Defines the root path route ("/")
