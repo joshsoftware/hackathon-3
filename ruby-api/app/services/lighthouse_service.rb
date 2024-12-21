@@ -22,7 +22,13 @@ module LighthouseService
       performance: report.dig("categories", "performance", "score"),
       accessibility: report.dig("categories", "accessibility", "score"),
       best_practices: report.dig("categories", "best-practices", "score"),
-      seo: report.dig("categories", "seo", "score")
+      seo: report.dig("categories", "seo", "score"),
+      largest_contentful_paint: report.dig("audits", "largest-contentful-paint", "score"),
+      first_input_delay: report.dig("audits", "max-potential-fid", "score"),
+      cumulative_layout_shift: report.dig("audits", "cumulative-layout-shift", "score"),
+      time_to_first_byte: report.dig("audits", "server-response-time", "score"),
+      time_to_interactive: report.dig("audits", "total-blocking-time", "score"),
+      first_contentful_paint: report.dig("audits", "first-contentful-paint", "score")
     }
   end
 end
