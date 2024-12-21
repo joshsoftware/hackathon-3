@@ -9,8 +9,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       post '/login', to: 'sessions#login'
       post '/events', to: 'user_events#create'
+      resources :aggregate_events, only: [:index, :show]
       post '/metrics', to: 'user_events#get_metrics'
-      resources :aggregate_events, only: [:index]
       put '/aggregate_events', to: 'aggregate_events#update_all'
     end
   end
