@@ -1,26 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "utils/services/login";
+import { useLoginMutations } from "./hooks";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { login } = useLoginMutations();
 
-  const handleLogin = async (event: React.FormEvent) => {
+  const handleLogin = (event: React.FormEvent) => {
     event.preventDefault();
 
-    try {
-      const response = await login(email, password);
-      const { token } = response.data;
+    console.log("login   ", email, password);
+    login.mutate(
+      { email, password },
+      {
+        onSuccess: (response) => {
+          console.log(response);
 
-      localStorage.setItem("AUTH_TOKEN", token);
-
-      navigate("/dashboard");
-    } catch (error) {
-      setError("Invalid email or password");
-    }
+          navigate("/events");
+          localStorage.setItem("AUTH_TOKEN", response.data.token);
+        },
+        onError: (error) => {
+          console.log(error);
+          setError(error as string);
+        },
+      }
+    );
   };
 
   return (
@@ -31,7 +38,7 @@ export default function Login() {
         </h1>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form method="post" onSubmit={handleLogin} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-gray-700">
               Email
