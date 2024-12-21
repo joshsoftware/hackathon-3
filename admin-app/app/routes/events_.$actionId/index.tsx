@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { UAParser } from "ua-parser-js";
 import { cn } from "~/lib/utils";
+import { BrowserIcon } from "~/shared/browser";
 import { DataTable } from "~/shared/data-table";
 
 type Event = {
@@ -59,7 +60,13 @@ export const columns: ColumnDef<Event>[] = [
     }) => {
       return (
         <div className="flex space-x-2">
-          {user_agent === "" ? "" : new UAParser(user_agent).getBrowser().name}
+          <BrowserIcon
+            browser={
+              user_agent === ""
+                ? ""
+                : (new UAParser(user_agent).getBrowser().name as BrowserTypes)
+            }
+          />
         </div>
       );
     },

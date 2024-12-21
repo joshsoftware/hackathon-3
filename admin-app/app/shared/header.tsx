@@ -7,7 +7,7 @@ export default function Header({ userToken }: { userToken: string | null }) {
   return (
     <header className="text-primary-background">
       <div className="container mx-auto px-4 py-4 flex justify-between">
-        <Link to="/" className="text-2xl font-bold flex items-center gap-1">
+        <Link to="/" className="text-2xl flex items-center gap-1">
           <img
             src="logo.png"
             alt="Trackters"
@@ -15,7 +15,7 @@ export default function Header({ userToken }: { userToken: string | null }) {
             height={42}
             className="rotate-90"
           />
-          <h1 className="text-2xl font-bold">Trackster</h1>
+          <h1 className="font-bold">Trackster</h1>
         </Link>
 
         {userToken ? (
