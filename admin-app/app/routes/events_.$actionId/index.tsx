@@ -5,6 +5,7 @@ import { DataTable } from "~/shared/data-table";
 import { Link, useParams } from "@remix-run/react";
 import { useQuery } from "react-query";
 import { cn } from "~/lib/utils";
+import { IResult, UAParser } from "ua-parser-js";
 
 type Event = {
   id: string;
@@ -13,6 +14,7 @@ type Event = {
   captured_at: string;
   browsers: string[];
   screenshot?: string;
+  user_agent: string;
 };
 
 export type EventDetails = {
@@ -21,11 +23,6 @@ export type EventDetails = {
   element: string;
   browsers: string[];
   userEvents?: Event[];
-};
-
-const browserIcons: { [key: string]: string } = {
-  chrome: "/public/safari.png",
-  firefox: "/public/safari.png",
 };
 
 export const columns: ColumnDef<Event>[] = [
@@ -57,20 +54,27 @@ export const columns: ColumnDef<Event>[] = [
     header: "Browsers",
     cell: ({
       row: {
-        original: { browsers = [] },
+        original: { user_agent = "" },
       },
     }) => {
-      if (!browsers.length) return null;
       return (
         <div className="flex space-x-2">
-          {browsers.map((browser: string) => (
-            <img
-              key={browser}
-              src={browserIcons[browser] || "https://placehold.co/400"}
-              alt={browser}
-              className="w-8 h-8 object-cover"
-            />
-          ))}
+          {user_agent === "" ? "" : new UAParser(user_agent).getBrowser().name}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "device",
+    header: "Device",
+    cell: ({
+      row: {
+        original: { user_agent = "" },
+      },
+    }) => {
+      return (
+        <div className="flex space-x-2">
+          {user_agent === "" ? "" : new UAParser(user_agent).getDevice().type}
         </div>
       );
     },
@@ -78,6 +82,17 @@ export const columns: ColumnDef<Event>[] = [
   {
     accessorKey: "os",
     header: "OS",
+    cell: ({
+      row: {
+        original: { user_agent = "" },
+      },
+    }) => {
+      return (
+        <div className="flex space-x-2">
+          {user_agent === "" ? "" : new UAParser(user_agent).getOS().name}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "screenshot",
