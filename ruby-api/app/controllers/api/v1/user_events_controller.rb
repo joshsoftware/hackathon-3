@@ -36,7 +36,8 @@ module Api
             :element_id,
             :now,
             :action,
-            :url
+            :url,
+            :user_agent
           )
         end
       end
